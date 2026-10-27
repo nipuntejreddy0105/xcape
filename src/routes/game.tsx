@@ -13,6 +13,7 @@ import {
   type Role,
 } from "@/lib/game";
 import type { MapMarker } from "@/components/ZoneMap";
+import { alertPulse, primeAudio, useWakeLock } from "@/lib/alerts";
 
 const ZoneMap = lazy(() => import("@/components/ZoneMap"));
 
@@ -96,6 +97,22 @@ function GameScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ping, stage]);
 
+  // Keep screen on during a match
+  useWakeLock(stage === "playing");
+
+  // Beep + buzz on each new ping
+  useEffect(() => {
+    if (stage === "playing" && ping > 0) alertPulse();
+  }, [ping, stage]);
+
+  // Beep + buzz whenever someone is tagged out
+  const taggedCount = players.filter((p) => p.tagged).length;
+  const prevTagged = useRef(0);
+  useEffect(() => {
+    if (taggedCount > prevTagged.current) alertPulse();
+    prevTagged.current = taggedCount;
+  }, [taggedCount]);
+
   // End when every runner is tagged
   useEffect(() => {
     if (stage === "playing" && players.filter((p) => p.role === "runner").every((p) => p.tagged)) setStage("over");
@@ -103,6 +120,7 @@ function GameScreen() {
 
   function startGame() {
     if (!me) return;
+    primeAudio();
     const c = me;
     setCenter(c);
     setPlayers((ps) =>
