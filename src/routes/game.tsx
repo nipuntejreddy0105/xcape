@@ -87,6 +87,7 @@ function GameScreen() {
   }, [stage]);
 
   const myRole = players.find((p) => p.isMe)!.role;
+  const poorGps = isPoorAccuracy(accuracy);
   const { phase, msLeft } = phaseAt(startedAt, now);
   const radius = zoneRadiusAt(initialRadius, startedAt, now);
   const ping = stage === "playing" ? pingIndex(startedAt, now) : 0;
@@ -150,6 +151,7 @@ function GameScreen() {
         setRadius={setInitialRadius}
         ready={!!me}
         gpsError={gpsError}
+        poorGps={poorGps}
         onStart={startGame}
       />
     );
@@ -224,6 +226,11 @@ function GameScreen() {
           )}
           {phase === "head_start" && myRole === "runner" && (
             <span className="brutal-card-dark px-3 py-2 font-display text-sm uppercase">Scatter!</span>
+          )}
+          {poorGps && (
+            <span className="brutal-card px-3 py-2 font-display text-xs uppercase text-primary">
+              Weak GPS signal — step outside
+            </span>
           )}
           {flagged && (
             <span className="warn-flash rounded-md border-4 border-foreground px-3 py-2 font-display uppercase">⚠ Outside zone</span>
