@@ -45,6 +45,7 @@ function GameScreen() {
   const [stage, setStage] = useState<"lobby" | "playing" | "over">("lobby");
   const [me, setMe] = useState<LatLng | null>(null);
   const [gpsError, setGpsError] = useState<string | null>(null);
+  const [accuracy, setAccuracy] = useState<number | null>(null);
   const [players, setPlayers] = useState<Player[]>(() => [
     { id: "me", name: "You", role: "hunter", isMe: true },
     ...DEMO_NAMES.map((n, i) => ({ id: n, name: n, role: (i < 1 ? "hunter" : "runner") as Role })),
@@ -59,9 +60,12 @@ function GameScreen() {
   useEffect(() => {
     if (!navigator.geolocation) return setGpsError("GPS isn't available on this device.");
     const id = navigator.geolocation.watchPosition(
-      (p) => setMe({ lat: p.coords.latitude, lng: p.coords.longitude }),
+      (p) => {
+        setMe({ lat: p.coords.latitude, lng: p.coords.longitude });
+        setAccuracy(p.coords.accuracy ?? null);
+      },
       (e) => setGpsError(e.message || "Allow location access to play."),
-      { enableHighAccuracy: true, maximumAge: 2000, timeout: 15000 },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
     );
     return () => navigator.geolocation.clearWatch(id);
   }, []);
