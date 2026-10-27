@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { haversineMeters, isOutsideZone, isOutsideTooLong } from "@/lib/geo";
+import { haversineMeters, isOutsideZone, isOutsideTooLong, isPoorAccuracy } from "@/lib/geo";
 
 const c = { lat: 0, lng: 0 };
 // ~0.001 deg lat ≈ 111m
@@ -15,5 +15,10 @@ describe("zone rules", () => {
     expect(isOutsideTooLong(0, 30_000)).toBe(false);
     expect(isOutsideTooLong(0, 30_001)).toBe(true);
     expect(isOutsideTooLong(null, 99_999)).toBe(false);
+  });
+  it("warns about weak GPS only when accuracy is worse than 20m", () => {
+    expect(isPoorAccuracy(20)).toBe(false);
+    expect(isPoorAccuracy(20.1)).toBe(true);
+    expect(isPoorAccuracy(null)).toBe(false);
   });
 });
