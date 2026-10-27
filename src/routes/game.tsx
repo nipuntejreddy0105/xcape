@@ -1,6 +1,6 @@
 import { createFileRoute, Link, ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { haversineMeters, isOutsideTooLong, isOutsideZone, MAX_RADIUS, MIN_RADIUS, type LatLng } from "@/lib/geo";
+import { isOutsideTooLong, isOutsideZone, MAX_RADIUS, MIN_RADIUS, type LatLng } from "@/lib/geo";
 import {
   canTag,
   fmtClock,
@@ -292,5 +292,3 @@ function Lobby({
   );
 }
 
-// keep haversine import used for future distance UI
-void haversineMeters;
