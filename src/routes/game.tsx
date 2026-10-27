@@ -312,6 +312,11 @@ function Lobby({
         </div>
         <input type="range" min={MIN_RADIUS} max={MAX_RADIUS} step={10} value={radius} onChange={(e) => setRadius(Number(e.target.value))} className="zone-slider w-full" aria-label="Zone radius" />
       </div>
+      {poorGps && (
+        <div className="brutal-card p-4 font-display text-sm uppercase text-primary">
+          Weak GPS signal — step outside for a better fix
+        </div>
+      )}
       <button
         disabled={!ready || !valid}
         onClick={onStart}
