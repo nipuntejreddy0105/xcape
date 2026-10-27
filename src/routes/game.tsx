@@ -1,6 +1,6 @@
 import { createFileRoute, Link, ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { isOutsideTooLong, isOutsideZone, MAX_RADIUS, MIN_RADIUS, type LatLng } from "@/lib/geo";
+import { isOutsideTooLong, isOutsideZone, isPoorAccuracy, MAX_RADIUS, MIN_RADIUS, type LatLng } from "@/lib/geo";
 import {
   canTag,
   fmtClock,
