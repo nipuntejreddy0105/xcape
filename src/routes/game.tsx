@@ -1,6 +1,6 @@
 import { createFileRoute, Link, ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { isOutsideTooLong, isOutsideZone, MAX_RADIUS, MIN_RADIUS, type LatLng } from "@/lib/geo";
+import { isOutsideTooLong, isOutsideZone, isPoorAccuracy, MAX_RADIUS, MIN_RADIUS, type LatLng } from "@/lib/geo";
 import {
   canTag,
   fmtClock,
@@ -45,6 +45,7 @@ function GameScreen() {
   const [stage, setStage] = useState<"lobby" | "playing" | "over">("lobby");
   const [me, setMe] = useState<LatLng | null>(null);
   const [gpsError, setGpsError] = useState<string | null>(null);
+  const [accuracy, setAccuracy] = useState<number | null>(null);
   const [players, setPlayers] = useState<Player[]>(() => [
     { id: "me", name: "You", role: "hunter", isMe: true },
     ...DEMO_NAMES.map((n, i) => ({ id: n, name: n, role: (i < 1 ? "hunter" : "runner") as Role })),
@@ -59,9 +60,12 @@ function GameScreen() {
   useEffect(() => {
     if (!navigator.geolocation) return setGpsError("GPS isn't available on this device.");
     const id = navigator.geolocation.watchPosition(
-      (p) => setMe({ lat: p.coords.latitude, lng: p.coords.longitude }),
+      (p) => {
+        setMe({ lat: p.coords.latitude, lng: p.coords.longitude });
+        setAccuracy(p.coords.accuracy ?? null);
+      },
       (e) => setGpsError(e.message || "Allow location access to play."),
-      { enableHighAccuracy: true, maximumAge: 2000, timeout: 15000 },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
     );
     return () => navigator.geolocation.clearWatch(id);
   }, []);
@@ -83,6 +87,7 @@ function GameScreen() {
   }, [stage]);
 
   const myRole = players.find((p) => p.isMe)!.role;
+  const poorGps = isPoorAccuracy(accuracy);
   const { phase, msLeft } = phaseAt(startedAt, now);
   const radius = zoneRadiusAt(initialRadius, startedAt, now);
   const ping = stage === "playing" ? pingIndex(startedAt, now) : 0;
@@ -146,6 +151,7 @@ function GameScreen() {
         setRadius={setInitialRadius}
         ready={!!me}
         gpsError={gpsError}
+        poorGps={poorGps}
         onStart={startGame}
       />
     );
@@ -221,6 +227,11 @@ function GameScreen() {
           {phase === "head_start" && myRole === "runner" && (
             <span className="brutal-card-dark px-3 py-2 font-display text-sm uppercase">Scatter!</span>
           )}
+          {poorGps && (
+            <span className="brutal-card px-3 py-2 font-display text-xs uppercase text-primary">
+              Weak GPS signal — step outside
+            </span>
+          )}
           {flagged && (
             <span className="warn-flash rounded-md border-4 border-foreground px-3 py-2 font-display uppercase">⚠ Outside zone</span>
           )}
@@ -252,6 +263,7 @@ function Lobby({
   setRadius,
   ready,
   gpsError,
+  poorGps,
   onStart,
 }: {
   players: Player[];
@@ -260,6 +272,7 @@ function Lobby({
   setRadius: (n: number) => void;
   ready: boolean;
   gpsError: string | null;
+  poorGps: boolean;
   onStart: () => void;
 }) {
   const hunters = players.filter((p) => p.role === "hunter").length;
@@ -299,6 +312,11 @@ function Lobby({
         </div>
         <input type="range" min={MIN_RADIUS} max={MAX_RADIUS} step={10} value={radius} onChange={(e) => setRadius(Number(e.target.value))} className="zone-slider w-full" aria-label="Zone radius" />
       </div>
+      {poorGps && (
+        <div className="brutal-card p-4 font-display text-sm uppercase text-primary">
+          Weak GPS signal — step outside for a better fix
+        </div>
+      )}
       <button
         disabled={!ready || !valid}
         onClick={onStart}

@@ -20,6 +20,13 @@ export const OUTSIDE_GRACE_MS = 30_000;
 export const MIN_RADIUS = 100;
 export const MAX_RADIUS = 1000;
 
+export const GPS_POOR_ACCURACY_M = 20;
+
+/** True when the GPS fix is too fuzzy (accuracy radius over 20m) — ask the user to step outside. */
+export function isPoorAccuracy(accuracyM: number | null | undefined): boolean {
+  return accuracyM != null && accuracyM > GPS_POOR_ACCURACY_M;
+}
+
 /** True once a player has been continuously outside for longer than the grace period. */
 export function isOutsideTooLong(outsideSince: number | null, now: number): boolean {
   return outsideSince !== null && now - outsideSince > OUTSIDE_GRACE_MS;
