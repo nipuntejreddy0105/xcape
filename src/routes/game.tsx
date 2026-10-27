@@ -33,8 +33,8 @@ type Player = {
   name: string;
   role: Role;
   isMe?: boolean;
-  pos?: LatLng;
-  ping?: { lat: number; lng: number; at: number };
+  pos?: LatLng | undefined;
+  ping?: { lat: number; lng: number; at: number } | undefined;
   tagged?: boolean;
 };
 
