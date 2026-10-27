@@ -20,10 +20,10 @@ function Index() {
       <p className="mt-auto font-display text-5xl uppercase leading-none">Hi, {name}</p>
       <p className="mb-8 mt-2 text-lg font-semibold">Ready to run?</p>
       <div className="flex flex-col gap-3 pb-6">
-        <Link to="/map" search={{ role: "host" }} className="brutal-card py-5 text-center font-display text-2xl uppercase">
+        <Link to="/game" className="brutal-card py-5 text-center font-display text-2xl uppercase">
           Host a game
         </Link>
-        <Link to="/map" search={{ role: "player" }} className="brutal-card-dark py-5 text-center font-display text-2xl uppercase">
+        <Link to="/game" className="brutal-card-dark py-5 text-center font-display text-2xl uppercase">
           Join with a code
         </Link>
       </div>
