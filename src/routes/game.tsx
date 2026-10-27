@@ -263,6 +263,7 @@ function Lobby({
   setRadius,
   ready,
   gpsError,
+  poorGps,
   onStart,
 }: {
   players: Player[];
@@ -271,6 +272,7 @@ function Lobby({
   setRadius: (n: number) => void;
   ready: boolean;
   gpsError: string | null;
+  poorGps: boolean;
   onStart: () => void;
 }) {
   const hunters = players.filter((p) => p.role === "hunter").length;
