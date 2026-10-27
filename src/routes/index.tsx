@@ -1,24 +1,32 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "SCRAM — Outdoor GPS Chase Game" },
+      { name: "description", content: "Host or join a real-time outdoor GPS game. Stay in the zone." },
+      { property: "og:title", content: "SCRAM — Outdoor GPS Chase Game" },
+      { property: "og:description", content: "Host or join a real-time outdoor GPS game." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const name = "Player";
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="mx-auto flex min-h-dvh max-w-md flex-col bg-primary p-5 text-primary-foreground">
+      <h1 className="mt-6 font-display text-7xl uppercase leading-none">Scram</h1>
+      <p className="mt-auto font-display text-5xl uppercase leading-none">Hi, {name}</p>
+      <p className="mb-8 mt-2 text-lg font-semibold">Ready to run?</p>
+      <div className="flex flex-col gap-3 pb-6">
+        <Link to="/map" search={{ role: "host" }} className="brutal-card py-5 text-center font-display text-2xl uppercase">
+          Host a game
+        </Link>
+        <Link to="/map" search={{ role: "player" }} className="brutal-card-dark py-5 text-center font-display text-2xl uppercase">
+          Join with a code
+        </Link>
+      </div>
+    </main>
   );
 }
