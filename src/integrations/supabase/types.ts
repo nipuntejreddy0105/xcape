@@ -182,7 +182,7 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string | null
           email: string
-          host_code: string
+          host_code?: string
           id: string
           longest_run_sec?: number | null
           name?: string | null
