@@ -174,6 +174,8 @@ export type Database = {
           rounds_won: number | null
           theme: string | null
           units: string | null
+          updated_at: string
+          updates_email: boolean
           username: string | null
         }
         Insert: {
@@ -189,6 +191,8 @@ export type Database = {
           rounds_won?: number | null
           theme?: string | null
           units?: string | null
+          updated_at?: string
+          updates_email?: boolean
           username?: string | null
         }
         Update: {
@@ -204,6 +208,8 @@ export type Database = {
           rounds_won?: number | null
           theme?: string | null
           units?: string | null
+          updated_at?: string
+          updates_email?: boolean
           username?: string | null
         }
         Relationships: []

@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS updates_email boolean NOT NULL DEFAULT false, ADD COLUMN IF NOT EXISTS updated_at timestamptz NOT NULL DEFAULT now();
