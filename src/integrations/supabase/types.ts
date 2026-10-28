@@ -20,87 +20,128 @@ export type Database = {
           center_lng: number | null
           code: string
           created_at: string | null
-          headstart_sec: number
-          host_id: string
+          current_radius_m: number | null
+          headstart_min: number | null
+          host_id: string | null
+          hunter_count: number | null
+          hunters_can_talk: boolean | null
           id: string
-          next_ping_at: string | null
-          ping_interval_sec: number
-          radius_meters: number
+          initial_radius_m: number | null
+          min_radius_m: number | null
+          ping_interval_min: number | null
+          play_zone_enabled: boolean | null
+          role_assignment_mode: string | null
+          round_length_min: number | null
+          shrink_interval_min: number | null
           started_at: string | null
-          status: string
+          status: string | null
         }
         Insert: {
           center_lat?: number | null
           center_lng?: number | null
           code: string
           created_at?: string | null
-          headstart_sec?: number
-          host_id: string
+          current_radius_m?: number | null
+          headstart_min?: number | null
+          host_id?: string | null
+          hunter_count?: number | null
+          hunters_can_talk?: boolean | null
           id?: string
-          next_ping_at?: string | null
-          ping_interval_sec?: number
-          radius_meters?: number
+          initial_radius_m?: number | null
+          min_radius_m?: number | null
+          ping_interval_min?: number | null
+          play_zone_enabled?: boolean | null
+          role_assignment_mode?: string | null
+          round_length_min?: number | null
+          shrink_interval_min?: number | null
           started_at?: string | null
-          status?: string
+          status?: string | null
         }
         Update: {
           center_lat?: number | null
           center_lng?: number | null
           code?: string
           created_at?: string | null
-          headstart_sec?: number
-          host_id?: string
+          current_radius_m?: number | null
+          headstart_min?: number | null
+          host_id?: string | null
+          hunter_count?: number | null
+          hunters_can_talk?: boolean | null
           id?: string
-          next_ping_at?: string | null
-          ping_interval_sec?: number
-          radius_meters?: number
+          initial_radius_m?: number | null
+          min_radius_m?: number | null
+          ping_interval_min?: number | null
+          play_zone_enabled?: boolean | null
+          role_assignment_mode?: string | null
+          round_length_min?: number | null
+          shrink_interval_min?: number | null
           started_at?: string | null
-          status?: string
+          status?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "games_host_id_fkey"
+            columns: ["host_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       players: {
         Row: {
-          game_id: string
+          accuracy: number | null
+          avatar_url: string | null
+          game_id: string | null
           id: string
-          is_outside: boolean
-          is_tagged: boolean
+          is_outside_zone: boolean | null
+          is_ready: boolean | null
+          is_tagged: boolean | null
           last_ping_lat: number | null
           last_ping_lng: number | null
           lat: number | null
           lng: number | null
           name: string
-          role: string
+          role: string | null
           updated_at: string | null
           user_id: string | null
+          username: string | null
         }
         Insert: {
-          game_id: string
+          accuracy?: number | null
+          avatar_url?: string | null
+          game_id?: string | null
           id?: string
-          is_outside?: boolean
-          is_tagged?: boolean
+          is_outside_zone?: boolean | null
+          is_ready?: boolean | null
+          is_tagged?: boolean | null
           last_ping_lat?: number | null
           last_ping_lng?: number | null
           lat?: number | null
           lng?: number | null
           name: string
-          role?: string
+          role?: string | null
           updated_at?: string | null
           user_id?: string | null
+          username?: string | null
         }
         Update: {
-          game_id?: string
+          accuracy?: number | null
+          avatar_url?: string | null
+          game_id?: string | null
           id?: string
-          is_outside?: boolean
-          is_tagged?: boolean
+          is_outside_zone?: boolean | null
+          is_ready?: boolean | null
+          is_tagged?: boolean | null
           last_ping_lat?: number | null
           last_ping_lng?: number | null
           lat?: number | null
           lng?: number | null
           name?: string
-          role?: string
+          role?: string | null
           updated_at?: string | null
           user_id?: string | null
+          username?: string | null
         }
         Relationships: [
           {
@@ -110,35 +151,60 @@ export type Database = {
             referencedRelation: "games"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "players_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
         Row: {
-          created_at: string
+          avatar_url: string | null
+          created_at: string | null
           email: string
+          host_code: string
           id: string
-          name: string
-          updated_at: string
-          updates_email: boolean
-          username: string
+          longest_run_sec: number | null
+          name: string | null
+          never_caught: number | null
+          rounds_played: number | null
+          rounds_won: number | null
+          theme: string | null
+          units: string | null
+          username: string | null
         }
         Insert: {
-          created_at?: string
-          email?: string
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          host_code: string
           id: string
-          name?: string
-          updated_at?: string
-          updates_email?: boolean
-          username?: string
+          longest_run_sec?: number | null
+          name?: string | null
+          never_caught?: number | null
+          rounds_played?: number | null
+          rounds_won?: number | null
+          theme?: string | null
+          units?: string | null
+          username?: string | null
         }
         Update: {
-          created_at?: string
+          avatar_url?: string | null
+          created_at?: string | null
           email?: string
+          host_code?: string
           id?: string
-          name?: string
-          updated_at?: string
-          updates_email?: boolean
-          username?: string
+          longest_run_sec?: number | null
+          name?: string | null
+          never_caught?: number | null
+          rounds_played?: number | null
+          rounds_won?: number | null
+          theme?: string | null
+          units?: string | null
+          username?: string | null
         }
         Relationships: []
       }
