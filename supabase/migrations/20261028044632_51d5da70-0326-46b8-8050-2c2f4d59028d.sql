@@ -1,0 +1,10 @@
+GRANT SELECT, INSERT, UPDATE ON public.profiles TO authenticated;
+GRANT ALL ON public.profiles TO service_role;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles ALTER COLUMN host_code SET DEFAULT upper(substr(md5(random()::text), 1, 6));
+DROP POLICY IF EXISTS "Owners read profiles" ON public.profiles;
+DROP POLICY IF EXISTS "Owners create profiles" ON public.profiles;
+DROP POLICY IF EXISTS "Owners edit profiles" ON public.profiles;
+CREATE POLICY "Owners read profiles" ON public.profiles FOR SELECT TO authenticated USING (auth.uid()=id);
+CREATE POLICY "Owners create profiles" ON public.profiles FOR INSERT TO authenticated WITH CHECK (auth.uid()=id);
+CREATE POLICY "Owners edit profiles" ON public.profiles FOR UPDATE TO authenticated USING (auth.uid()=id) WITH CHECK (auth.uid()=id);
