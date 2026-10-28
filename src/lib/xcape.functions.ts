@@ -46,7 +46,7 @@ export const updateProfile = createServerFn({ method: "POST" }).middleware([requ
     avatar_url: z.string().url().max(500).optional(),
   }))
   .handler(async ({ data, context }) => {
-    const patch = { ...data };
+    const patch = Object.fromEntries(Object.entries(data).filter(([, v]) => v !== undefined)) as { name?: string; username?: string; units?: "km" | "mi"; theme?: "light" | "dark"; avatar_url?: string };
     if (patch.username !== undefined) {
       const problem = usernameError(patch.username);
       if (problem) return { ok: false as const, error: problem };
@@ -147,7 +147,7 @@ export const updateRules = createServerFn({ method: "POST" }).middleware([requir
       patch[k] = typeof v === "number" ? clampRule(k as RuleKey, v) : v;
     }
     if (typeof patch["initial_radius_m"] === "number") patch["current_radius_m"] = patch["initial_radius_m"];
-    const { error } = await db.from("games").update(patch).eq("id", data.gameId).eq("status", "lobby");
+    const { error } = await db.from("games").update(patch as never).eq("id", data.gameId).eq("status", "lobby");
     if (error) throw new Error("Could not save the rule.");
     return true;
   });
